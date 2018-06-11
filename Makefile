@@ -5,7 +5,7 @@ OUTPUT_DIRECTORY := _build
 # So that eclipse can use the build output for indexing.
 VERBOSE=1
 
-SDK_ROOT := /home/benjamin/Dokument/nrf51822/sdk
+SDK_ROOT := /home/parallels/esk8/nRF5_SDK/nRF5_SDK_12.3.0_d7731ad
 PROJ_DIR := .
 
 $(OUTPUT_DIRECTORY)/nrf51822_xxac.out: \
@@ -35,6 +35,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/bsp/bsp.c \
   $(SDK_ROOT)/components/libraries/bsp/bsp_btn_ble.c \
   $(SDK_ROOT)/components/libraries/bsp/bsp_nfc.c \
+  $(SDK_ROOT)/components/drivers_nrf/twi_master/nrf_drv_twi.c \
   $(PROJ_DIR)/main.c \
   $(SDK_ROOT)/external/segger_rtt/RTT_Syscalls_GCC.c \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT.c \
@@ -173,7 +174,7 @@ CFLAGS +=  -Wall -O3 -g3 #-Werror
 CFLAGS += -mfloat-abi=soft
 # keep every function in separate section, this allows linker to discard unused ones
 CFLAGS += -ffunction-sections -fdata-sections -fno-strict-aliasing
-CFLAGS += -fno-builtin --short-enums 
+CFLAGS += -fno-builtin --short-enums
 
 # C++ flags common to all targets
 CXXFLAGS += \
