@@ -14,7 +14,7 @@
 static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
 
 
-static uint8_t buffer[128 * 64 / 8] = {
+static uint8_t buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -91,7 +91,7 @@ static bool ssd1306_send_cmd(uint8_t cmd) {
     w2_data[0] = 0x00;
     w2_data[1] = cmd;
 
-    err_code = nrf_drv_twi_tx(&m_twi, SSD1306ADDR, w2_data, sizeof(w2_data), false);
+    err_code = nrf_drv_twi_tx(&m_twi, SSD1306_ADDR, w2_data, sizeof(w2_data), false);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -103,7 +103,7 @@ static bool ssd1306_send_data(uint8_t data) {
     w2_data[0] = 0x40;
     w2_data[1] = data;
 
-    err_code = nrf_drv_twi_tx(&m_twi, SSD1306ADDR, w2_data, 2, false);
+    err_code = nrf_drv_twi_tx(&m_twi, SSD1306_ADDR, w2_data, 2, false);
     APP_ERROR_CHECK(err_code);
 }
 
@@ -144,7 +144,7 @@ void ssd1306_clear() {
     ssd1306_send_cmd(0);
     ssd1306_send_cmd(7);
 
-    for (int i = 0; i < 1024; i++) {
+    for (int i = 0; i < (SSD1306_WIDTH * SSD1306_HEIGHT)/8; i++) {
         ssd1306_send_data(0x00);
     }
 }
@@ -167,19 +167,19 @@ void ssd1306_display() {
     ssd1306_send_cmd(0);
     ssd1306_send_cmd(7);
 
-    uint8_t w2_data[128+1];
+    uint8_t w2_data[SSD1306_BUFFER_PAGE_SIZE+1];
     uint8_t *p = &w2_data;
     p++;
     w2_data[0] = 0x40;
 
     uint8_t *bp = &buffer;
-    for (int i = 0; i < 1024; i=i+128) {
+    for (int i = 0; i < (SSD1306_WIDTH * SSD1306_HEIGHT)/8; i=i+SSD1306_BUFFER_PAGE_SIZE) {
         //ssd1306_send_data(buffer[i]);
-        memcpy(p, bp, 128);
+        memcpy(p, bp, SSD1306_BUFFER_PAGE_SIZE);
 
-        nrf_drv_twi_tx(&m_twi, SSD1306ADDR, w2_data, 128+1, false);
+        nrf_drv_twi_tx(&m_twi, SSD1306_ADDR, w2_data, SSD1306_BUFFER_PAGE_SIZE+1, false);
 
-        bp=bp+128;
+        bp=bp+SSD1306_BUFFER_PAGE_SIZE;
     }
 
 }
@@ -192,8 +192,8 @@ void twi_init(void)
     ret_code_t err_code;
 
     const nrf_drv_twi_config_t twi_lm75b_config = {
-       .scl                = 7,
-       .sda                = 30,
+       .scl                = SSD1306_SCL,
+       .sda                = SSD1306_SDA,
        .frequency          = NRF_TWI_FREQ_400K,
        .interrupt_priority = APP_IRQ_PRIORITY_HIGH,
        .clear_bus_init     = false

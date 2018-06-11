@@ -6,7 +6,14 @@
 
 #include "nordic_common.h"
 
-#define SSD1306ADDR 0x3C
+#define SSD1306_ADDR 0x3C
+#define SSD1306_SDA 30
+#define SSD1306_SCL 7
+
+#define SSD1306_WIDTH 128
+#define SSD1306_HEIGHT 64
+
+#define SSD1306_BUFFER_PAGE_SIZE 128
 
 /* TWI instance ID. */
 #define TWI_INSTANCE_ID 0
