@@ -43,6 +43,7 @@
 #include "nrf51.h"
 
 #include "packet.h"
+#include "ssd1306.h"
 
 // Use WT module (rx = p0.01 ; tx = p0.02 ; no 32k crystal)
 #ifndef MODULE_WT
@@ -595,6 +596,9 @@ int main(void) {
 	advertising_init();
 	conn_params_init();
 
+  twi_init();
+
+
 	timer_init();
 
 	err_code = ble_advertising_start(BLE_ADV_MODE_FAST);
@@ -602,8 +606,23 @@ int main(void) {
 
 	my_printf("UART TEST\r\n");
 
+  ssd1306_init();
+  ssd1306_clear();
+
+  nrf_gpio_cfg_output(0);
+  nrf_gpio_pin_set(0);
+
+  ssd1306_display();
+  nrf_gpio_pin_clear(0);
+
 	// Enter main loop.
 	for (;;) {
+
+    nrf_gpio_pin_clear(0);
+    nrf_delay_ms(1000);
+    nrf_gpio_pin_set(0);
+    nrf_delay_ms(1000);
+
 		// Restore uart on errors
 		if (uart_error) {
 			app_uart_close();

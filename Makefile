@@ -50,6 +50,7 @@ SRC_FILES += \
   $(SDK_ROOT)/components/softdevice/common/softdevice_handler/softdevice_handler.c \
   $(PROJ_DIR)/crc.c \
   $(PROJ_DIR)/packet.c \
+  $(PROJ_DIR)/ssd1306.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
