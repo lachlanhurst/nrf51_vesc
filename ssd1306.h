@@ -22,10 +22,19 @@
 #define WHITE 1
 #define INVERSE 2
 
-
+// this one clears the ssd1306 chip (and display)
 void ssd1306_clear();
+// this one clears only the nrf buffer
+void ssd1306_clear_buffer(void);
 void ssd1306_display();
+void ssd1306_draw_circle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
+void ssd1306_draw_fast_hline(int16_t x, int16_t y, int16_t w, uint16_t color);
+void ssd1306_draw_fast_hline_internal(int16_t x, int16_t y, int16_t w, uint16_t color);
+void ssd1306_draw_fast_vline(int16_t x, int16_t y, int16_t h, uint16_t color);
+void ssd1306_draw_fast_vline_internal(int16_t x, int16_t __y, int16_t __h, uint16_t color);
+void ssd1306_draw_line(int16_t x0, int16_t y0, int16_t x1, int16_t y1, uint16_t color);
 void ssd1306_draw_pixel(int16_t x, int16_t y, uint16_t color);
+void ssd1306_fill_circle(int16_t x0, int16_t y0, int16_t r, uint16_t color);
 bool ssd1306_init();
 void ssd1306_inverse(bool);
 void ssd1306_setup();

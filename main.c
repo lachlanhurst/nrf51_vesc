@@ -608,7 +608,8 @@ int main(void) {
 
   ssd1306_init();
   ssd1306_setup();
-  ssd1306_clear();
+  ssd1306_clear_buffer();
+  //ssd1306_clear();
 
   nrf_gpio_cfg_output(0);
   nrf_gpio_pin_set(0);
@@ -623,6 +624,12 @@ int main(void) {
   ssd1306_draw_pixel(7,7,INVERSE);
   ssd1306_draw_pixel(8,8,INVERSE);
   ssd1306_draw_pixel(9,9,INVERSE);
+
+  ssd1306_draw_line(10,0,20,10,INVERSE);
+
+  ssd1306_draw_circle(30,30,15,WHITE);
+  ssd1306_fill_circle(60,30,10,WHITE);
+
 
   ssd1306_display();
   nrf_gpio_pin_clear(0);
