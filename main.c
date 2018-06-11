@@ -627,8 +627,20 @@ int main(void) {
 
   ssd1306_draw_line(10,0,20,10,INVERSE);
 
-  ssd1306_draw_circle(30,30,15,WHITE);
-  ssd1306_fill_circle(60,30,10,WHITE);
+  //ssd1306_draw_circle(30,30,15,WHITE);
+  //ssd1306_fill_circle(60,30,10,WHITE);
+
+  ssd1306_set_textcolor(INVERSE);
+  ssd1306_set_cursor(0,20);
+  ssd1306_set_textsize(2);
+  ssd1306_puts("oled_nrf51_vesc");
+  // for (uint8_t i = 0; i < 168; i++) {
+  //       if (i == '\n') continue;
+  //       ssd1306_write(i);
+  //       if ((i > 0) && (i % 21 == 0))
+  //           ssd1306_write('\n');
+  //   }
+
 
 
   ssd1306_display();

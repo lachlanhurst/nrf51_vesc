@@ -51,6 +51,7 @@ SRC_FILES += \
   $(PROJ_DIR)/crc.c \
   $(PROJ_DIR)/packet.c \
   $(PROJ_DIR)/ssd1306.c \
+  $(PROJ_DIR)/glcdfont.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
