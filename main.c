@@ -607,10 +607,22 @@ int main(void) {
 	my_printf("UART TEST\r\n");
 
   ssd1306_init();
+  ssd1306_setup();
   ssd1306_clear();
 
   nrf_gpio_cfg_output(0);
   nrf_gpio_pin_set(0);
+
+  ssd1306_draw_pixel(0,0,INVERSE);
+  ssd1306_draw_pixel(1,1,INVERSE);
+  ssd1306_draw_pixel(2,2,INVERSE);
+  ssd1306_draw_pixel(3,3,INVERSE);
+  ssd1306_draw_pixel(4,4,INVERSE);
+  ssd1306_draw_pixel(5,5,INVERSE);
+  ssd1306_draw_pixel(6,6,INVERSE);
+  ssd1306_draw_pixel(7,7,INVERSE);
+  ssd1306_draw_pixel(8,8,INVERSE);
+  ssd1306_draw_pixel(9,9,INVERSE);
 
   ssd1306_display();
   nrf_gpio_pin_clear(0);

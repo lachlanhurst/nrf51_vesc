@@ -10,8 +10,16 @@
 
 #include "ssd1306.h"
 
+#define ssd1306_swap(a, b) { int16_t t = a; a = b; b = t; }
 
 static const nrf_drv_twi_t m_twi = NRF_DRV_TWI_INSTANCE(TWI_INSTANCE_ID);
+
+static int16_t _width, _height, WIDTH, HEIGHT, cursor_x, cursor_y;
+static uint8_t textsize, rotation;
+static uint16_t textcolor, textbgcolor;
+bool wrap,   // If set, 'wrap' text at right edge of display
+     _cp437; // If set, use correct CP437 charset (default is off)
+
 
 
 static uint8_t buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8] = {
@@ -81,6 +89,84 @@ static uint8_t buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
 
+
+int16_t ssd1306_width(void)
+{
+    return _width;
+}
+
+int16_t ssd1306_height(void)
+{
+    return _height;
+}
+
+void set_rotation(uint8_t x)
+{
+    rotation = (x & 3);
+    switch (rotation) {
+    case 0:
+    case 2:
+        _width  = WIDTH;
+        _height = HEIGHT;
+        break;
+    case 1:
+    case 3:
+        _width  = HEIGHT;
+        _height = WIDTH;
+        break;
+    }
+}
+
+void ssd1306_setup()
+{
+    _width    = WIDTH;
+    _height   = HEIGHT;
+    cursor_y  = cursor_x    = 0;
+    textsize  = 1;
+    textcolor = textbgcolor = 0xFFFF;
+    wrap      = true;
+    _cp437    = false;
+
+    _width = WIDTH = SSD1306_WIDTH;
+    _height = HEIGHT = SSD1306_HEIGHT;
+    rotation  = 0;
+}
+
+
+void ssd1306_draw_pixel(int16_t x, int16_t y, uint16_t color)
+{
+    if ((x < 0) || (x >= ssd1306_width()) || (y < 0) || (y >= ssd1306_height()))
+        return;
+
+    // check rotation, move pixel around if necessary
+    switch (rotation) {
+    case 1:
+        ssd1306_swap(x, y);
+        x = WIDTH - x - 1;
+        break;
+    case 2:
+        x = WIDTH - x - 1;
+        y = HEIGHT - y - 1;
+        break;
+    case 3:
+        ssd1306_swap(x, y);
+        y = HEIGHT - y - 1;
+        break;
+    }
+
+    // x is which column
+    switch (color) {
+    case WHITE:
+        buffer[x + (y / 8)*SSD1306_WIDTH] |=  (1 << (y & 7));
+        break;
+    case BLACK:
+        buffer[x + (y / 8)*SSD1306_WIDTH] &= ~(1 << (y & 7));
+        break;
+    case INVERSE:
+        buffer[x + (y / 8)*SSD1306_WIDTH] ^=  (1 << (y & 7));
+        break;
+    }
+}
 
 
 static bool ssd1306_send_cmd(uint8_t cmd) {

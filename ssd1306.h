@@ -25,8 +25,10 @@
 
 void ssd1306_clear();
 void ssd1306_display();
+void ssd1306_draw_pixel(int16_t x, int16_t y, uint16_t color);
 bool ssd1306_init();
 void ssd1306_inverse(bool);
+void ssd1306_setup();
 
 void twi_init(void);
 
